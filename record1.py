@@ -19,5 +19,4 @@ while True:
     elif operator == '4':div(a,b)
 
     if input('Continue? (y/n): ') == 'n':break
-
     

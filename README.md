@@ -317,3 +317,179 @@ print('EXECUTED SUCCESSFULLY...')
 
 
 ```py
+import pickle as p
+
+def display():
+    with open('Student.dat','rb') as f:
+        l = []
+        try:
+
+            while True:
+                l.append(p.load(f))
+        except EOFError:
+            pass
+
+        s = '\n'.join(l)
+        print(s)
+
+def create():
+    try:
+        f = open('Student.dat','wb')
+        f.close()
+    except FileNotFoundError:
+        f = open('Student.dat','x')
+        return f
+
+def append(data):
+    with open('Student.dat','ab') as f:
+        p.dump(data,f)
+```
+---
+---
+# Record 11
+
+## Q: Create a binary file interface for the following:
+ (1) Create a record 'flights.dat'
+ (2) Display all records  
+ (3) Search a record  
+
+```py
+import pickle as p
+
+def display():
+    with open('Flights.dat','rb') as f:
+        data = p.load(f)
+        for i in data:
+            print(f'{i}: {data[i][0]}, {data[i][1]}, ({data[i][2]})')
+
+def create():
+    try:
+        f = open('Flights.dat','wb')
+        f.close()
+    except FileNotFoundError:
+        f = open('Flights.dat','x')
+        data = {}
+        while True:
+            data[input('Flight No.: ')] = [input('Destination: '),input('Departure: '),input('Arrival: ')]
+            if input('Continue? (y/n): ') == 'n':break
+        p.dump(data,f)
+        f.close()
+
+def search(fno):
+    with open('Flights.dat','rb') as f:
+        data = p.load(f)
+        if fno in data:
+            print(f'{fno}: {data[fno][0]}, {data[fno][1]}, ({data[fno][2]})')
+        else:
+            print('FLIGHT NOT FOUND')
+    
+```
+---
+---
+# Record 12
+
+## Q: Create a binary file interface for the following:
+ (1) Create a record 'books.dat'
+ (2) Display all records  
+ (3) Update a record  
+
+
+```py
+import pickle as p
+
+def display():
+    with open('Books.dat','rb') as f:
+        data = p.load(f)
+        for j in (data):
+            print(f'{j}: {",".join(data[j])}')
+
+def create():
+    try:
+        f = open('Books.dat','rb')
+        f.close()
+    except FileNotFoundError:
+        f = open('Books.dat','wb')
+        data = {}
+        while True:
+            data[input('Book No.: ')] = [input('Title: '),input('Price: ')]
+            if input('Continue? (y/n): ') == 'n':break
+        p.dump(data,f)
+        f.close()
+
+def update(bno):
+    with open('Books.dat','rb') as f:
+        data = p.load(f)
+        if bno in data:
+            data[bno] = [input('Title: '),input('Price: ')]
+            with open('Books.dat','wb') as f:
+                f.seek(0)
+                p.dump(data,f)
+        else:
+            print('BOOK NOT FOUND')
+
+
+
+```
+---
+---
+# Record 13
+
+## Q: Create a csv interface for the following:
+ (1) Create a record 'Employee.csv' storing [Eno,Ename,Salary]  
+ (2) Display all records  
+
+```py
+import csv 
+
+def display():
+    with open('Employee.csv','r') as f:
+        data = csv.reader(f)
+        for i in data:
+            print(f'{i[0]}: {i[1]}, {i[2]}')
+
+def create():
+    try:
+        f = open('Employee.csv','r')
+        f.close()
+    except FileNotFoundError:
+        f = open('Employee.csv','w')
+        data = []
+        while True:
+            data.append([input('Emp No.: '),input('Name: '),input('Salary: '),])
+            if input('Continue? (y/n): ') == 'n':break
+        writer = csv.writer(f)
+        writer.writerows(data)
+        f.close()
+
+```
+---
+---
+# Record 14
+
+## Q: Create a csv interface for the following:
+ (1) Create a record 'Sports.csv' storing [Sport, Competitions, Prizes Won]  
+ (2) Display all records  
+ (3) Search a record  
+
+```py
+NotImplementedError
+```
+---
+---
+# Record 15
+
+## Q: Create an interface an integer stack:
+
+```py
+NotImplementedError
+```
+---
+---
+# Record 16
+
+## Q: Create an interface a stack containing [Eno, Ename, Salary]:
+
+```py
+NotImplementedError
+```
+---
