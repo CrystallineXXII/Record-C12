@@ -329,27 +329,67 @@ def display():
         except EOFError:
             pass
 
-        s = '\n'.join(l)
-        print(s)
+        for i in l:
+            print(f'''
+ROLL NO : {i[0]}
+NAME    : {i[1]}
+MARKS   : {i[2]}''')
+
 
 def create():
+    def create_for(f):
+        while True:
+            roll = int(input('ROLL NO: '))
+            name = input('NAME: ')
+            marks = int(input('MARKS: '))
+            data = [roll,name,marks]
+            p.dump(data,f)
+            if input('Continue? (y/n): ') == 'n':
+                break
     try:
-        f = open('Student.dat','wb')
+        f = open('Student.dat','rb')
         f.close()
+        confirm = True if input('ARE YOU SURE YOU WANT TO OVERWRITE? (y/n): ') == 'y' else False
+        if confirm:
+            f = open('Student.dat','wb')
+            create_for(f)
+            f.close()
+
     except FileNotFoundError:
-        f = open('Student.dat','x')
-        return f
+        f = open('Student.dat','wb')
+        create_for(f)
+        f.close()
 
 def append(data):
     with open('Student.dat','ab') as f:
         p.dump(data,f)
+
+while True:
+    print('''
+    1. CREATE
+    2. APPEND
+    3. DISPLAY
+    4. EXIT
+    ''')
+    ch = int(input('ENTER YOUR CHOICE : '))
+    if ch == 1:
+        create()
+    elif ch == 2:
+        data = [int(input('ROLL : ')),input('NAME : '),int(input('MARKS : '))]
+        append(data)
+    elif ch == 3:
+        display()
+    elif ch == 4:
+        break
+    else:
+        print('INVALID CHOICE...')
 ```
 ---
 ---
 # Record 11
 
 ## Q: Create a binary file interface for the following:
- (1) Create a record 'flights.dat'
+ (1) Create a record 'flights.dat'  
  (2) Display all records  
  (3) Search a record  
 
@@ -360,28 +400,54 @@ def display():
     with open('Flights.dat','rb') as f:
         data = p.load(f)
         for i in data:
-            print(f'{i}: {data[i][0]}, {data[i][1]}, ({data[i][2]})')
+            print(f'{i}: {data[i][0]}, ({data[i][1]} - {data[i][2]})')
 
 def create():
-    try:
-        f = open('Flights.dat','wb')
-        f.close()
-    except FileNotFoundError:
-        f = open('Flights.dat','x')
+    def create_for(f):
         data = {}
         while True:
             data[input('Flight No.: ')] = [input('Destination: '),input('Departure: '),input('Arrival: ')]
             if input('Continue? (y/n): ') == 'n':break
         p.dump(data,f)
+    try:
+        f = open('Flights.dat','rb')
+        f.close()
+        confirm = True if input('ARE YOU SURE YOU WANT TO OVERWRITE? (y/n): ') == 'y' else False
+        if confirm:
+            f = open('Flights.dat','wb')
+            create_for(f)
+            f.close()
+        
+    except FileNotFoundError:
+        f = open('Flights.dat','wb')
+        create_for(f)
         f.close()
 
 def search(fno):
     with open('Flights.dat','rb') as f:
         data = p.load(f)
         if fno in data:
-            print(f'{fno}: {data[fno][0]}, {data[fno][1]}, ({data[fno][2]})')
+            print(f'{fno}: {data[fno][0]}, ({data[fno][1]} - {data[fno][2]})')
         else:
             print('FLIGHT NOT FOUND')
+    
+while True:
+    print('''
+    1. CREATE
+    2. SEARCH
+    3. DISPLAY
+    4. EXIT
+    ''')
+    ch = int(input('ENTER YOUR CHOICE : '))
+    if ch == 1:
+        create()
+    elif ch == 2:
+        search(input('Flight No.: '))
+    elif ch == 3:
+        display()
+    elif ch == 4:
+        break
+
     
 ```
 ---
@@ -389,7 +455,7 @@ def search(fno):
 # Record 12
 
 ## Q: Create a binary file interface for the following:
- (1) Create a record 'books.dat'
+ (1) Create a record 'books.dat'  
  (2) Display all records  
  (3) Update a record  
 
@@ -404,16 +470,24 @@ def display():
             print(f'{j}: {",".join(data[j])}')
 
 def create():
-    try:
-        f = open('Books.dat','rb')
-        f.close()
-    except FileNotFoundError:
-        f = open('Books.dat','wb')
+    def create_for(f):
         data = {}
         while True:
             data[input('Book No.: ')] = [input('Title: '),input('Price: ')]
             if input('Continue? (y/n): ') == 'n':break
         p.dump(data,f)
+    try:
+        f = open('Books.dat','rb')
+        f.close()
+        confirm = True if input('ARE YOU SURE YOU WANT TO OVERWRITE? (y/n): ') == 'y' else False
+        if confirm:
+            f = open('Books.dat','wb')
+            create_for(f)
+            f.close()
+        
+    except FileNotFoundError:
+        f = open('Books.dat','wb')
+        create_for(f)
         f.close()
 
 def update(bno):
@@ -427,7 +501,22 @@ def update(bno):
         else:
             print('BOOK NOT FOUND')
 
-
+while True:
+    print('''
+    1. CREATE
+    2. UPDATE
+    3. DISPLAY
+    4. EXIT
+    ''')
+    ch = int(input('ENTER YOUR CHOICE : '))
+    if ch == 1:
+        create()
+    elif ch == 2:
+        update(input('Book No.: '))
+    elif ch == 3:
+        display()
+    elif ch == 4:
+        break
 
 ```
 ---
@@ -448,18 +537,39 @@ def display():
             print(f'{i[0]}: {i[1]}, {i[2]}')
 
 def create():
+    def create_for(f):
+        data = []
+        while True:
+            data.append([input('NAME: '),input('DEPARTMENT: '),input('SALARY: ')])
+            if input('Continue? (y/n): ') == 'n':break
+        csv.writer(f).writerows(data)
     try:
         f = open('Employee.csv','r')
         f.close()
+        confirm = True if input('ARE YOU SURE YOU WANT TO OVERWRITE? (y/n): ') == 'y' else False
+        if confirm:
+            f = open('Employee.csv','w')
+            create_for(f)
+            f.close()
+        
     except FileNotFoundError:
         f = open('Employee.csv','w')
-        data = []
-        while True:
-            data.append([input('Emp No.: '),input('Name: '),input('Salary: '),])
-            if input('Continue? (y/n): ') == 'n':break
-        writer = csv.writer(f)
-        writer.writerows(data)
+        create_for(f)
         f.close()
+
+while True:
+    print('''
+    1. CREATE
+    2. DISPLAY
+    3. EXIT
+    ''')
+    ch = int(input('ENTER YOUR CHOICE : '))
+    if ch == 1:
+        create()
+    elif ch == 2:
+        display()
+    elif ch == 3:
+        break
 
 ```
 ---
@@ -472,7 +582,57 @@ def create():
  (3) Search a record  
 
 ```py
-NotImplementedError
+import csv 
+
+def display():
+    with open('Sports.csv','r') as f:
+        data = csv.reader(f)
+        for i in data:
+            print(f'{i[0]}: {i[1]}, {i[2]}')
+
+def create():
+    def create_for(f):
+        data = []
+        while True:
+            data.append([input('SPORT: '),input('COMPETITION: '),input('PRIZES: ')])
+            if input('Continue? (y/n): ') == 'n':break
+        csv.writer(f).writerows(data)
+    try:
+        f = open('Sports.csv','r')
+        f.close()
+        confirm = True if input('ARE YOU SURE YOU WANT TO OVERWRITE? (y/n): ') == 'y' else False
+        if confirm:
+            f = open('Sports.csv','w')
+            create_for(f)
+            f.close()
+        
+    except FileNotFoundError:
+        f = open('Sports.csv','w')
+        create_for(f)
+        f.close()
+
+def search(sport):
+    with open('Sports.csv','r') as f:
+        data = csv.reader(f)
+        for i in data:
+            if sport == i[0]:
+                print(f'{i[0]}: {i[1]}, {i[2]}')
+while True:
+    print('''
+    1. CREATE
+    2. DISPLAY
+    3. SEARCH
+    4. EXIT
+    ''')
+    ch = int(input('ENTER YOUR CHOICE : '))
+    if ch == 1:
+        create()
+    elif ch == 2:
+        display()
+    elif ch == 3:
+        search(input('SPORT: '))
+    elif ch == 4:
+        break
 ```
 ---
 ---
@@ -481,7 +641,39 @@ NotImplementedError
 ## Q: Create an interface an integer stack:
 
 ```py
-NotImplementedError
+stack = []
+
+def pop():
+    return stack.pop()
+
+def push(val):
+    stack.append(val)
+
+def display():
+    print(stack)
+
+def peek():
+    return stack[-1]
+
+while True:
+    print('''
+    1. PUSH
+    2. POP
+    3. PEEK
+    4. DISPLAY 
+    5. EXIT
+    ''')
+    ch = int(input('ENTER YOUR CHOICE : '))
+    if ch == 1:
+        push(input('ENTER VALUE TO PUSH: '))
+    elif ch == 2:
+        print(pop())
+    elif ch == 3:
+        peek()
+    elif ch == 4:
+        display()
+    elif ch == 5:
+        break
 ```
 ---
 ---
@@ -490,6 +682,41 @@ NotImplementedError
 ## Q: Create an interface a stack containing [Eno, Ename, Salary]:
 
 ```py
-NotImplementedError
+stack = []
+
+def pop():
+    return stack.pop()
+
+def push(data):
+    stack.append(data)
+
+def display():
+    for i in stack:
+        print(f'{i[0]}: {i[1]}, {i[2]}')
+
+def peek():
+    return stack[-1]
+
+while True:
+    print('''
+    1. PUSH EMPLOYEE
+    2. POP EMPLOYEE
+    3. PEEK EMPLOYEE
+    4. DISPLAY EMPLOYEES
+    5. EXIT
+    ''')
+    ch = int(input('ENTER YOUR CHOICE : '))
+    if ch == 1:
+        push([input('NO: '),input('NAME: '),input('SALARY: ')])
+    elif ch == 2:
+        data = pop()
+        print(f'POPPED EMPLOYEE: {data[0]}: {data[1]}, {data[2]}')
+    elif ch == 3:
+        data = peek()
+        print(f'PEEKED EMPLOYEE: {data[0]}: {data[1]}, {data[2]}')
+    elif ch == 4:
+        display()
+    elif ch == 5:
+        break
 ```
 ---
