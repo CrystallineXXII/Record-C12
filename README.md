@@ -136,7 +136,7 @@ record = ()
 def add(name):
     global record
     if name.lower().strip() in record:
-        return 'CONTACT ALREADY EXISTS'
+        return 'STUDENT ALREADY EXIST'
     else:
         record += (name.lower().strip(),)
 
